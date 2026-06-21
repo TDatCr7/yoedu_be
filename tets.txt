@@ -1,0 +1,39 @@
+@Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
+        grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        jwtAuthenticationConverter.setPrincipalClaimName("sub");
+        return jwtAuthenticationConverter;
+    }@Component
+public class CustomAccessDeniedHandler implements AccessDeniedHandler {
+
+    @Override
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
+        response.setStatus(HttpStatus.FORBIDDEN.value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+        String json = String.format(
+            "{\"success\":false,\"message\":\"Forbidden: You don't have permission to access this resource\",\"data\":null,\"timestamp\":\"%s\"}",
+            LocalDateTime.now().toString()
+        );
+        response.getWriter().write(json);
+    }
+}@Component
+public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
+    @Override
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+        String json = String.format(
+            "{\"success\":false,\"message\":\"Unauthorized: Please provide a valid token\",\"data\":null,\"timestamp\":\"%s\"}",
+            LocalDateTime.now().toString()
+        );
+        response.getWriter().write(json);
+    }
+}

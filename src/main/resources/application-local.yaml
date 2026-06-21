@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    driver-class-name:  com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/yoedu_prj
+    username: root
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+server:
+  port: 8080
+
+app:
+  jwt:
+    issuer: yoedu-be
+    secret: local-dev-secret-key-must-be-at-least-32-chars
+    access-token-ttl-minutes: 60

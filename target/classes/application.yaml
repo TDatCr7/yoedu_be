@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: yoedu_prj
+  profiles:
+    active: ${APP_PROFILE:local}
